@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(uv init:*)",
+      "Bash(uv add:*)",
+      "Bash(uv run:*)",
+      "Bash(mkdir phase-1)",
+      "Bash(mv:*)",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks)",
+      "Bash(uv pip install -e .)",
+      "Bash(cmd /c \"dir /s C:\\\\Users\\\\user\\\\Desktop\\\\AI-Hackathon-2\\\\todo\\\\hackathon-todo\\\\frontend\\\\\")",
+      "Bash(cmd /c \"dir C:\\\\Users\\\\user\\\\Desktop\\\\AI-Hackathon-2\\\\todo\\\\hackathon-todo\")",
+      "Bash(npm install framer-motion)"
+    ]
+  }
+}
