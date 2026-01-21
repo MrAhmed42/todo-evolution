@@ -61,3 +61,16 @@ __pycache__/
 *.pyc
 .venv/
 .claudecode/
+
+# Temporary Claude files
+tmpclaude*
+.claudecode/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE and OS files
+.vscode/
+.DS_Store
