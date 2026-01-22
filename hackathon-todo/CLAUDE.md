@@ -6,7 +6,7 @@ This is a monorepo containing both frontend and backend for the todo application
 
 - `frontend/` - Next.js application with Better Auth integration
 - `backend/` - FastAPI application with SQLModel and JWT authentication
-- `specs/001-web-todo/` - All specifications, plans, and tasks for the web todo feature
+- `specs/001-web-todo/` - All specifications, plans, and tasks for the web todo feature.
 
 ## Development Workflow
 
