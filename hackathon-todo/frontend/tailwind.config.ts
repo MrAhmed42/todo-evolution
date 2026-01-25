@@ -2,11 +2,11 @@ import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
+    // Change these to absolute-style patterns
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './(auth)/**/*.{js,ts,jsx,tsx,mdx}', // For your auth folder
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './lib/**/*.{js,ts,jsx,tsx,mdx}',
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/**/*.{js,ts,jsx,tsx,mdx}', // Just in case you use a src folder
   ],
   theme: {
     extend: {
