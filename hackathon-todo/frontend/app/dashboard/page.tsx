@@ -1,13 +1,14 @@
 "use client"; // This must be at the very top!
 
 import { useEffect, useState } from "react";
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // Added Variants here
 import TaskDashboard from "../../components/TaskDashboard";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { authClient } from "../../lib/auth";
 import { useRouter } from "next/navigation";
 
-const fadeInUpVariants = {
+// Defining the type as Variants prevents the "index signature" error on Vercel
+const fadeInUpVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 20,
