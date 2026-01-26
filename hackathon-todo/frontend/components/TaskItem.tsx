@@ -78,80 +78,81 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onTaskUpdated, onTaskDeleted,
   };
 
   return (
-    <li className="bg-white hover:bg-slate-50 transition-colors duration-200 border-b border-slate-100 last:border-0">
-      <div className="px-4 sm:px-6 py-4 sm:py-5">
+    <li className="bg-white hover:bg-slate-50 transition-colors duration-200 border-b border-slate-100 last:border-0 shadow-sm rounded-xl mb-3 overflow-hidden">
+      <div className="px-4 py-4 sm:px-6 sm:py-5">
         {isEditing ? (
-          <div className="p-3 sm:p-4 bg-slate-50 rounded-lg sm:rounded-xl">
-            <div className="mb-3">
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="block w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-                disabled={pendingOperations[saveOperationId]}
-              />
-            </div>
-            <div className="mb-3">
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={2}
-                className="block w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-                disabled={pendingOperations[saveOperationId]}
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2">
+          <div className="space-y-3 bg-slate-50 p-3 rounded-lg">
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="block w-full p-2.5 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 text-sm"
+              disabled={pendingOperations[saveOperationId]}
+            />
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              className="block w-full p-2.5 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 text-sm"
+              disabled={pendingOperations[saveOperationId]}
+            />
+            <div className="flex flex-row gap-2">
               <button
                 onClick={handleSave}
                 disabled={pendingOperations[saveOperationId]}
-                className="flex-1 inline-flex items-center justify-center h-10 border border-transparent text-sm font-medium rounded-lg text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50"
+                className="flex-1 inline-flex items-center justify-center h-10 text-sm font-semibold rounded-lg text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50"
               >
                 {pendingOperations[saveOperationId] ? <LoadingSpinner /> : 'Save'}
               </button>
               <button
                 onClick={handleCancel}
-                className="flex-1 inline-flex items-center justify-center h-10 border border-slate-300 text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-100"
+                className="flex-1 inline-flex items-center justify-center h-10 text-sm font-semibold rounded-lg text-slate-700 bg-white border border-slate-300 hover:bg-slate-100"
               >
                 Cancel
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-start flex-1 min-w-0">
+          <div className="flex flex-col gap-4">
+            {/* Top section: Checkbox and Text */}
+            <div className="flex items-start">
               <input
                 type="checkbox"
                 checked={task.completed}
                 onChange={handleToggleComplete}
-                className="h-5 w-5 mt-1 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500 cursor-pointer"
+                className="h-5 w-5 mt-0.5 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500 cursor-pointer"
                 disabled={pendingOperations[toggleOperationId]}
               />
               <div className="ml-3 flex-1 min-w-0">
-                <p className={`text-base font-medium break-words ${task.completed ? 'line-through text-slate-400' : 'text-slate-900'}`}>
+                <p className={`text-[15px] font-semibold break-words leading-tight ${task.completed ? 'line-through text-slate-400' : 'text-slate-800'}`}>
                   {task.title}
                 </p>
                 {task.description && (
-                  <p className={`text-sm mt-1 break-words ${task.completed ? 'line-through text-slate-400' : 'text-slate-500'}`}>
+                  <p className={`text-sm mt-1 break-words leading-snug ${task.completed ? 'line-through text-slate-400' : 'text-slate-500'}`}>
                     {task.description}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* RESPONSIVE BUTTONS: Stack on mobile, Row on Desktop */}
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            {/* Bottom section: Buttons Side-by-Side */}
+            <div className="flex flex-row items-center gap-2">
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex-1 sm:w-20 h-10 sm:h-9 inline-flex items-center justify-center text-sm font-medium rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors"
+                className="flex-1 h-9 inline-flex items-center justify-center text-sm font-bold rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors border border-emerald-100"
               >
                 Edit
               </button>
               <button
                 onClick={handleDelete}
                 disabled={pendingOperations[deleteOperationId]}
-                className="flex-1 sm:w-20 h-10 sm:h-9 inline-flex items-center justify-center text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors disabled:opacity-50"
+                className="flex-1 h-9 inline-flex items-center justify-center text-sm font-bold rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors border border-red-100 disabled:opacity-50"
               >
-                {pendingOperations[deleteOperationId] ? <LoadingSpinner /> : 'Delete'}
+                {pendingOperations[deleteOperationId] ? (
+                  <div className="flex items-center gap-2"><LoadingSpinner /><span>Deleting</span></div>
+                ) : (
+                  'Delete'
+                )}
               </button>
             </div>
           </div>
