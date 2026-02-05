@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, Variants } from 'framer-motion'; // Added Variants here
-import TaskDashboard from "../../components/TaskDashboard";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import { authClient } from "../../lib/auth";
+import TaskDashboard from "../../../components/TaskDashboard";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import { authClient } from "../../../lib/auth";
 import { useRouter } from "next/navigation";
 
 // Defining the type as Variants prevents the "index signature" error on Vercel

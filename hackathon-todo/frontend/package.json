@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@openai/chatkit-react": "^1.4.3",
     "autoprefixer": "^10.4.23",
     "better-auth": "^1.0.0",
     "framer-motion": "^12.27.5",

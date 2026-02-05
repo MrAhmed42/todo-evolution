@@ -49,3 +49,29 @@ class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     completed: Optional[bool] = None
+
+
+class Conversation(SQLModel, table=True):
+    """Conversation model for chat history"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
+    user_id: str = Field(nullable=False, index=True)  # Foreign key to User
+    title: Optional[str] = Field(default=None, max_length=200)
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
+
+    # Relationship to messages
+    messages: List["Message"] = Relationship(back_populates="conversation")
+
+
+class Message(SQLModel, table=True):
+    """Message model for chat history"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
+    conversation_id: str = Field(foreign_key="conversation.id", nullable=False, index=True)
+    role: str = Field(nullable=False)  # Either "user" or "assistant"
+    content: str = Field(nullable=False)
+    tool_calls: Optional[str] = Field(default=None)  # JSON string of tool calls
+    tool_responses: Optional[str] = Field(default=None) # JSON string of tool responses
+    created_at: datetime = Field(default_factory=datetime.now)
+
+    # Relationship to conversation
+    conversation: Conversation = Relationship(back_populates="messages")

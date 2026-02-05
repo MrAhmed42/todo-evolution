@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse  
+from fastapi.responses import JSONResponse
 from .db import create_db_and_tables, engine
-from .routes import auth, tasks
+from .routes import auth, tasks, chat
 from .config import get_settings
 import logging
 
@@ -36,7 +36,7 @@ app = FastAPI(
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000"], # Added localhost fallback
+    allow_origins=[settings.frontend_url, "http://localhost:3000", "http://localhost:3001"], # Added localhost fallbacks
     allow_credentials=True,
     allow_methods=["*"], # Simplified to allow all methods
     allow_headers=["*"], # Simplified to allow all headers including Authorization
@@ -55,10 +55,10 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 # ADDED: Catch-all for unexpected server errors (500s)
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unexpected error: {str(exc)}")
+    logger.error(f"Unexpected error: {str(exc)}", exc_info=True)  # Include traceback
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "Internal Server Error"}
+        content={"detail": f"Internal Server Error: {str(exc)}"}  # Include error in response for debugging
     )
 
 @app.middleware("http")
@@ -71,6 +71,7 @@ async def log_requests(request: Request, call_next):
 # Routes
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(tasks.router, prefix="/api", tags=["tasks"])
+app.include_router(chat.router, prefix="/api", tags=["chat"])
 
 @app.get("/")
 def read_root():

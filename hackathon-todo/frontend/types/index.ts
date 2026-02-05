@@ -13,3 +13,9 @@ export interface Task {
   created_at: string
   updated_at: string
 }
+
+export interface ChatResponse {
+  response: string;
+  thread_id: string;
+  message_id: string;
+}

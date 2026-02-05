@@ -1,8 +1,24 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
+import { authClient } from '../lib/auth';
+import { useRouter } from 'next/navigation';
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkUser() {
+      const session = await authClient.getSession();
+      if (session?.data?.user) {
+        // If user is already logged in, redirect to dashboard
+        router.push("/dashboard");
+      }
+    }
+    checkUser();
+  }, [router]);
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
       <div className="max-w-xs sm:max-w-sm md:max-w-md w-full text-center space-y-6 sm:space-y-8">

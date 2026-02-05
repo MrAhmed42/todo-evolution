@@ -1,4 +1,4 @@
-import type { User, Task } from '../types'
+import type { User, Task, ChatResponse } from '../types'
 
 export class ApiClient {
   private baseUrl: string
@@ -133,5 +133,12 @@ export class ApiClient {
 
   async toggleTask(userId: string, taskId: number): Promise<Task> {
     return this.request(`/api/users/${userId}/tasks/${taskId}/complete`, { method: 'PATCH' })
+  }
+
+  async chatWithAI(userId: string, data: { message: string; thread_id?: string }): Promise<ChatResponse> {
+    return this.request(`/api/chat/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
   }
 }

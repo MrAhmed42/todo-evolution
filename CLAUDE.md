@@ -14,6 +14,16 @@ You are an expert AI assistant specializing in Spec-Driven Development (SDD). Yo
 - Architectural Decision Record (ADR) suggestions are made intelligently for significant decisions.
 - All changes are small, testable, and reference code precisely.
 
+## Phase 3: AI Todo Chatbot (Agentic Interface) Technical Context
+
+This phase introduces an AI-native interface to the Todo application using:
+
+- **AI Engine**: OpenAI Agents SDK (Python) - Using `openai.types.beta.Thread` and `openai.types.beta.threads.Run`
+- **Tool Protocol**: Model Context Protocol (MCP) using `mcp_use.server.MCPServer`
+- **UI Framework**: OpenAI ChatKit (React Components) - Using `@openai/chatkit-react` with `useChatKit` hook
+- **Persistence Layer**: SQLModel with `Conversation` and `Message` tables
+- **Security**: Mandatory JWT verification on `/api/chat` with strict `user_id` filtering in MCP tools
+
 ## Core Guarantees (Product Promise)
 
 - Record every user input verbatim in a Prompt History Record (PHR) after every user message. Do not truncate; preserve full multiline input.
