@@ -32,3 +32,6 @@ npm run dev  # Start development server
 - User isolation is enforced at the database level with user_id filtering
 - All API endpoints require JWT validation in headers
 - Shared BETTER_AUTH_SECRET between frontend and backend
+
+
+---------------
