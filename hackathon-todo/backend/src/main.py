@@ -33,17 +33,23 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS Configuration
+# --- UPDATED CORS CONFIGURATION ---
+# We explicitly allow your Vercel URL and Hugging Face domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000", "http://localhost:3001"], # Added localhost fallbacks
+    allow_origins=[
+        "https://next-todo-evolution.vercel.app/", 
+        "https://ahmed421092-hack-2-phrase-3.hf.space",
+        "http://localhost:3000",
+        "http://localhost:3001",
+    ],
     allow_credentials=True,
-    allow_methods=["*"], # Simplified to allow all methods
-    allow_headers=["*"], # Simplified to allow all headers including Authorization
+    allow_methods=["*"],
+    allow_headers=["*"],
     max_age=3600,
 )
 
-# FIXED: Global exception handler now returns a proper JSONResponse
+# Global exception handler for HTTP exceptions
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     logger.error(f"HTTP Exception {exc.status_code}: {exc.detail}")
@@ -52,13 +58,13 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         content={"detail": exc.detail}
     )
 
-# ADDED: Catch-all for unexpected server errors (500s)
+# Catch-all for unexpected server errors (500s)
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unexpected error: {str(exc)}", exc_info=True)  # Include traceback
+    logger.error(f"Unexpected error: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": f"Internal Server Error: {str(exc)}"}  # Include error in response for debugging
+        content={"detail": f"Internal Server Error: {str(exc)}"}
     )
 
 @app.middleware("http")
@@ -68,10 +74,11 @@ async def log_requests(request: Request, call_next):
     response = await call_next(request)
     return response
 
-# Routes
-app.include_router(auth.router, prefix="/api", tags=["auth"])
-app.include_router(tasks.router, prefix="/api", tags=["tasks"])
-app.include_router(chat.router, prefix="/api", tags=["chat"])
+# --- ROUTES ---
+# Ensure these prefixes align with your rewrite: /api/:path*
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
+app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 
 @app.get("/")
 def read_root():
