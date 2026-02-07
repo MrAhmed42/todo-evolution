@@ -39,22 +39,24 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-slate-50"> {/* Lightened background slightly */}
       {/* Header/Navigation Bar */}
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-slate-900">
-                Task<span className="text-emerald-500">Flow</span>
-              </h1>
+              <Link href="/dashboard" className="flex items-center">
+                <h1 className="text-xl font-bold text-slate-900">
+                  Task<span className="text-emerald-500">Flow</span>
+                </h1>
+              </Link>
             </div>
 
             {/* Desktop Navigation - Hidden on mobile */}
             <nav className="hidden md:flex space-x-4">
               <Link
                 href="/dashboard"
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/dashboard')
                     ? 'bg-emerald-100 text-emerald-700'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
@@ -64,7 +66,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
               <Link
                 href="/chat"
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/chat')
                     ? 'bg-emerald-100 text-emerald-700'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
@@ -79,7 +81,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
               <button
                 id="chat-toggle-button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="p-2 text-slate-600 hover:text-slate-900"
+                className="p-2 -mr-2 text-slate-600 hover:text-slate-900 focus:outline-none"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -89,10 +91,10 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
 
             {/* Desktop User Info - Hidden on mobile */}
             <div className="hidden md:flex items-center">
-              <span className="text-sm text-slate-600 mr-4">Welcome, {user.name || user.email}</span>
+              <span className="text-sm text-slate-600 mr-4">Welcome, {user.name?.split(' ')[0] || user.email?.split('@')[0]}</span>
               <button
                 onClick={() => authClient.signOut()}
-                className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+                className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors"
               >
                 Sign Out
               </button>
@@ -101,7 +103,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Component */}
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
@@ -109,7 +111,8 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
         authClient={authClient}
       />
 
-      <main className="max-w-full sm:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content Area - Optimized Padding for Mobile */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {children}
       </main>
     </div>
