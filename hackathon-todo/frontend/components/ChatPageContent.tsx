@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ApiClient } from '../../../lib/api';
-import LoadingSpinner from '../../../components/LoadingSpinner';
+import { ApiClient } from '../lib/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface Message {
   id: string;
