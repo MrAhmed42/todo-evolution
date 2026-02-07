@@ -98,7 +98,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onTaskUpdated, onTaskDeleted,
               placeholder="Description (optional)..."
               disabled={pendingOperations[saveOperationId]}
             />
-            <div className="flex gap-2">
+            <div className="flex flex-row gap-2">
               <button
                 onClick={handleSave}
                 disabled={pendingOperations[saveOperationId]}
@@ -128,22 +128,22 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onTaskUpdated, onTaskDeleted,
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className={`text-base font-bold leading-tight truncate ${task.completed ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                <h3 className={`text-base font-bold leading-tight break-words ${task.completed ? 'line-through text-slate-400' : 'text-slate-800'}`}>
                   {task.title}
                 </h3>
                 {task.description && (
-                  <p className={`text-sm mt-1 line-clamp-2 leading-relaxed ${task.completed ? 'line-through text-slate-400' : 'text-slate-500'}`}>
+                  <p className={`text-sm mt-1 line-clamp-2 leading-relaxed break-words ${task.completed ? 'line-through text-slate-400' : 'text-slate-500'}`}>
                     {task.description}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Actions: Side-by-Side buttons on ALL screens */}
-            <div className="flex items-center gap-2 mt-1">
+            {/* Actions: Forced Side-by-Side buttons on ALL screens */}
+            <div className="flex flex-row items-center gap-2 mt-1 w-full flex-nowrap">
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all active:scale-95 border border-emerald-100"
+                className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all active:scale-95 border border-emerald-100 whitespace-nowrap"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
@@ -153,7 +153,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onTaskUpdated, onTaskDeleted,
               <button
                 onClick={handleDelete}
                 disabled={pendingOperations[deleteOperationId]}
-                className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-all active:scale-95 border border-red-100 disabled:opacity-50"
+                className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-all active:scale-95 border border-red-100 disabled:opacity-50 whitespace-nowrap"
               >
                 {pendingOperations[deleteOperationId] ? (
                   <LoadingSpinner />

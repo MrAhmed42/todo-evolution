@@ -17,7 +17,6 @@ interface ChatPageContentProps {
 }
 
 export default function ChatPageContent({ userId }: ChatPageContentProps) {
-  // --- PERSISTENCE LOGIC ---
   const [messages, setMessages] = useState<Message[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('todo_chat_history');
@@ -114,7 +113,7 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-100px)] bg-white overflow-hidden">
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
@@ -177,12 +176,11 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* --- RE-ENGINEERED INPUT AREA --- */}
-      <div className="border-t border-slate-200 bg-white p-4">
-        <form 
-          onSubmit={handleSubmit} 
-          className="flex items-center space-x-2 w-full max-w-4xl mx-auto"
-          style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+      {/* --- FIXED INPUT AREA --- */}
+      <div className="border-t border-slate-200 bg-white p-3 md:p-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-row items-center gap-2 w-full max-w-4xl mx-auto flex-nowrap"
         >
           <input
             type="text"
@@ -190,15 +188,14 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Type your message..."
             disabled={isLoading}
-            className="flex-grow min-w-0 border border-slate-300 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+            className="flex-1 min-w-0 border border-slate-300 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
           />
           <button
             type="submit"
             disabled={isLoading || !inputValue.trim()}
-            className="flex-none bg-emerald-400 hover:bg-emerald-500 text-white font-bold rounded-full px-6 py-3 text-sm transition-all whitespace-nowrap"
-            style={{ width: 'auto', minWidth: 'fit-content' }}
+            className="flex-none bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-full px-5 py-3 text-sm transition-all whitespace-nowrap active:scale-95"
           >
-            Send
+            {isLoading ? '...' : 'Send'}
           </button>
         </form>
       </div>

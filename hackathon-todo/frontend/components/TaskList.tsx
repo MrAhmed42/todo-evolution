@@ -39,9 +39,10 @@ const TaskList: React.FC<TaskListProps> = ({
 }) => {
   return (
     <div className="w-full">
-      {/* FIXED HEADING SECTION: 
-        - items-center: Centers everything on mobile
-        - md:items-start: Aligns to left on laptop/desktop
+      {/* FIXED HEADING SECTION:
+         - flex flex-col: Stacks title and line vertically
+         - items-center: Centers them on mobile
+         - md:items-start: Aligns them to the left on larger screens
       */}
       <div className="flex flex-col items-center md:items-start mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
