@@ -157,31 +157,31 @@ export default function ChatPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="max-w-4xl mx-auto w-full"
+      className="max-w-full sm:max-w-4xl mx-auto w-full h-full"
     >
-      <div className="mb-6 sm:mb-8 flex justify-between items-center">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Chat with AI Assistant</h1>
           <div className="w-8 sm:w-12 h-1 bg-emerald-500 mt-2 rounded-full"></div>
         </div>
         {messages.length > 0 && (
-          <button 
+          <button
             onClick={() => {
               setMessages([]);
               setThreadId(null);
               sessionStorage.removeItem('todo_chat_history');
               sessionStorage.removeItem('todo_chat_thread_id');
             }}
-            className="text-xs text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider font-semibold"
+            className="text-xs sm:text-sm text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider font-semibold self-end sm:self-auto"
           >
             Clear History
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden h-[calc(100vh-200px)] sm:h-[60vh] flex flex-col">
         {/* Messages Container */}
-        <div className="h-[60vh] overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-slate-500">
               <div className="mb-4">
@@ -248,19 +248,25 @@ export default function ChatPage() {
 
         {/* Input Area */}
         <div className="border-t border-slate-200 p-4">
-          <form onSubmit={handleSubmit} className="flex space-x-3">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type your message here..."
               disabled={isLoading}
-              className="flex-1 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-slate-50 transition-all"
+              className="flex-1 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-slate-50 transition-all min-h-[44px]"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
             />
             <button
               type="submit"
               disabled={isLoading || !inputValue.trim()}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 min-h-[44px]"
             >
               Send
             </button>

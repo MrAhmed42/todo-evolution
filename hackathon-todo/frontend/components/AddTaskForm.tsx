@@ -81,7 +81,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ userId, onTaskAdded, isPendin
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center justify-center w-full sm:w-24 h-10 sm:h-9 border border-transparent text-sm font-medium rounded-lg sm:rounded-xl shadow-sm text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 transition-colors duration-200 min-h-[40px]"
+          className="inline-flex items-center justify-center w-full h-10 sm:h-9 border border-transparent text-sm font-medium rounded-lg sm:rounded-xl shadow-sm text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 transition-colors duration-200 min-h-[40px]"
         >
           {isPending ? (
             <>

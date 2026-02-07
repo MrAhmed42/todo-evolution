@@ -64,10 +64,10 @@ export default function DashboardPage() {
       variants={fadeInUpVariants}
       className="min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8"
     >
-      <div className="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto w-full">
+      <div className="max-w-full sm:max-w-xs md:max-w-sm lg:max-w-lg xl:max-w-2xl 2xl:max-w-4xl mx-auto w-full">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">My Todo List</h1>
-          <div className="w-8 sm:w-12 h-1 bg-emerald-500 mt-2 rounded-full"></div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 text-center sm:text-left">My Todo List</h1>
+          <div className="w-8 sm:w-12 h-1 bg-emerald-500 mt-2 rounded-full ml-0 sm:ml-0"></div>
         </div>
         {/* We pass the userId here to fix the red error */}
         <TaskDashboard userId={userId} />

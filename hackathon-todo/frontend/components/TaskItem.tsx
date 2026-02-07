@@ -96,7 +96,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onTaskUpdated, onTaskDeleted,
               className="block w-full p-2.5 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 text-sm"
               disabled={pendingOperations[saveOperationId]}
             />
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={handleSave}
                 disabled={pendingOperations[saveOperationId]}
@@ -135,8 +135,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onTaskUpdated, onTaskDeleted,
               </div>
             </div>
 
-            {/* Bottom section: Buttons Side-by-Side */}
-            <div className="flex flex-row items-center gap-2">
+            {/* Bottom section: Buttons Side-by-Side on larger screens, stacked on mobile */}
+            <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={() => setIsEditing(true)}
                 className="flex-1 h-9 inline-flex items-center justify-center text-sm font-bold rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors border border-emerald-100"

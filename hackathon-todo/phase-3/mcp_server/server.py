@@ -3,19 +3,37 @@ import os
 from pathlib import Path
 from fastmcp import FastMCP
 
-# Path setup
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+# --- ROBUST PATH SETUP ---
+# Find the project root (where src/ or backend/ lives)
+current_file = Path(__file__).resolve()
+# Go up until we are in the root directory (/app in Docker)
+BASE_DIR = current_file.parent
+while BASE_DIR.name != "app" and BASE_DIR.parent != BASE_DIR:
+    if (BASE_DIR / "src").exists() or (BASE_DIR / "backend").exists():
+        break
+    BASE_DIR = BASE_DIR.parent
+
 if str(BASE_DIR) not in sys.path:
     sys.path.append(str(BASE_DIR))
 
 mcp = FastMCP("Todo-Server")
 
+# Internal helper to handle the inconsistent folder naming (src vs backend.src)
+def get_db_models():
+    try:
+        from backend.src.models import Task
+        from backend.src.db import engine
+        return Task, engine
+    except ImportError:
+        from backend.src.models import Task
+        from backend.src.db import engine
+        return Task, engine
+
 @mcp.tool()
 async def add_new_task(user_id: str, title: str, description: str = "Added via AI") -> str:
     """Add a new task. Requires user_id and title."""
     from sqlmodel import Session
-    from backend.src.models import Task
-    from backend.src.db import engine
+    Task, engine = get_db_models()
     try:
         with Session(engine) as session:
             task = Task(user_id=user_id, title=title, description=description, completed=False)
@@ -29,8 +47,7 @@ async def add_new_task(user_id: str, title: str, description: str = "Added via A
 async def list_tasks(user_id: str) -> str:
     """List all tasks for a specific user. Shows ID, Status, and Title."""
     from sqlmodel import Session, select
-    from backend.src.models import Task
-    from backend.src.db import engine
+    Task, engine = get_db_models()
     try:
         with Session(engine) as session:
             statement = select(Task).where(Task.user_id == user_id)
@@ -44,8 +61,7 @@ async def list_tasks(user_id: str) -> str:
 async def mark_task_complete(user_id: str, task_id: int) -> str:
     """Mark a task as completed. Requires user_id and task_id."""
     from sqlmodel import Session, select
-    from backend.src.models import Task
-    from backend.src.db import engine
+    Task, engine = get_db_models()
     try:
         with Session(engine) as session:
             statement = select(Task).where(Task.id == task_id, Task.user_id == user_id)
@@ -62,8 +78,7 @@ async def mark_task_complete(user_id: str, task_id: int) -> str:
 async def delete_task(user_id: str, task_id: int) -> str:
     """Permanently delete a task. Requires user_id and task_id."""
     from sqlmodel import Session, select
-    from backend.src.models import Task
-    from backend.src.db import engine
+    Task, engine = get_db_models()
     try:
         with Session(engine) as session:
             statement = select(Task).where(Task.id == task_id, Task.user_id == user_id)
@@ -79,8 +94,7 @@ async def delete_task(user_id: str, task_id: int) -> str:
 async def update_task_title(user_id: str, task_id: int, new_title: str) -> str:
     """Update the title of an existing task."""
     from sqlmodel import Session, select
-    from backend.src.models import Task
-    from backend.src.db import engine
+    Task, engine = get_db_models()
     try:
         with Session(engine) as session:
             statement = select(Task).where(Task.id == task_id, Task.user_id == user_id)
