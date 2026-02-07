@@ -17,14 +17,13 @@ interface ChatPageContentProps {
 }
 
 export default function ChatPageContent({ userId }: ChatPageContentProps) {
-  // --- PERSISTENCE LOGIC START ---
+  // --- PERSISTENCE LOGIC ---
   const [messages, setMessages] = useState<Message[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('todo_chat_history');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          // Crucial: Convert string timestamps back to real Date objects for the UI
           return parsed.map((m: any) => ({
             ...m,
             timestamp: new Date(m.timestamp)
@@ -45,7 +44,6 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
     return null;
   });
 
-  // Effect to save state whenever messages or threadId change
   useEffect(() => {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('todo_chat_history', JSON.stringify(messages));
@@ -54,13 +52,11 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
       }
     }
   }, [messages, threadId]);
-  // --- PERSISTENCE LOGIC END ---
 
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -73,7 +69,6 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
     e.preventDefault();
     if (!inputValue.trim() || isLoading || !userId) return;
 
-    // Add user message to the chat
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
@@ -87,19 +82,15 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
 
     try {
       const apiClient = new ApiClient();
-
-      // Call the chat API
       const response = await apiClient.chatWithAI(userId, {
         message: inputValue,
         thread_id: threadId || undefined
       });
 
-      // Update thread ID if returned
       if (response.thread_id) {
         setThreadId(response.thread_id);
       }
 
-      // Add assistant message to the chat
       const assistantMessage: Message = {
         id: response.message_id || Date.now().toString(),
         role: 'assistant',
@@ -110,14 +101,12 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
-
       const errorMessage: Message = {
         id: Date.now().toString(),
         role: 'assistant',
         content: 'Sorry, I encountered an error. Please try again.',
         timestamp: new Date(),
       };
-
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -125,11 +114,11 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
   };
 
   return (
-    <div className="h-[400px] flex flex-col">
+    <div className="h-full flex flex-col bg-white overflow-hidden">
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-slate-200">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-slate-500">
+          <div className="flex flex-col items-center justify-center h-full text-center text-slate-500 p-6">
             <div className="mb-4">
               <div className="bg-emerald-100 p-3 rounded-full inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,7 +127,7 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
               </div>
             </div>
             <h3 className="text-lg font-medium text-slate-700 mb-1">Start a conversation</h3>
-            <p className="text-sm">Ask me about your tasks, create new ones, or get help organizing your day!</p>
+            <p className="text-sm max-w-xs">Ask me about your tasks, create new ones, or get help organizing your day!</p>
           </div>
         ) : (
           <AnimatePresence initial={false}>
@@ -152,15 +141,15 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 shadow-sm ${
                     message.role === 'user'
                       ? 'bg-emerald-500 text-white rounded-br-none'
-                      : 'bg-slate-100 text-slate-800 rounded-bl-none'
+                      : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200'
                   }`}
                 >
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div className="text-sm md:text-base whitespace-pre-wrap break-words">{message.content}</div>
                   <div
-                    className={`text-xs mt-1 ${
+                    className={`text-[10px] mt-1 text-right ${
                       message.role === 'user' ? 'text-emerald-100' : 'text-slate-500'
                     }`}
                   >
@@ -172,18 +161,14 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
           </AnimatePresence>
         )}
         {isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex justify-start"
-          >
-            <div className="bg-slate-100 text-slate-800 rounded-2xl rounded-bl-none px-4 py-3 max-w-[80%]">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+            <div className="bg-slate-100 border border-slate-200 text-slate-800 rounded-2xl rounded-bl-none px-4 py-3">
               <div className="flex items-center space-x-2">
-                <div className="animate-pulse text-sm">Thinking...</div>
+                <div className="animate-pulse text-xs font-medium">AI is thinking</div>
                 <div className="flex space-x-1">
-                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
-                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-75"></div>
-                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-150"></div>
+                  <div className="w-1 h-1 bg-slate-400 rounded-full animate-bounce"></div>
+                  <div className="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.5s]"></div>
                 </div>
               </div>
             </div>
@@ -192,16 +177,16 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="border-t border-slate-200 p-4">
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      {/* FIXED Input Area */}
+      <div className="border-t border-slate-200 p-3 bg-white">
+        <form onSubmit={handleSubmit} className="flex flex-row items-center gap-2 max-w-4xl mx-auto">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type your message here..."
+            placeholder="Ask me anything..."
             disabled={isLoading}
-            className="flex-1 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-slate-50 transition-all min-h-[44px]"
+            className="flex-1 min-w-0 border border-slate-300 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-slate-50 transition-all"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -212,7 +197,7 @@ export default function ChatPageContent({ userId }: ChatPageContentProps) {
           <button
             type="submit"
             disabled={isLoading || !inputValue.trim()}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 min-h-[44px]"
+            className="flex-shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full px-5 py-2.5 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 shadow-sm"
           >
             Send
           </button>
