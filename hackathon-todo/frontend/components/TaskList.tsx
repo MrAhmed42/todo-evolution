@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TaskItem from './TaskItem';
@@ -29,64 +27,41 @@ const item = {
   show: { y: 0, opacity: 1 }
 };
 
-const TaskList: React.FC<TaskListProps> = ({ 
-  tasks, 
-  onTaskUpdated, 
-  onTaskDeleted, 
-  userId, 
-  pendingOperations, 
-  setOperationPending 
-}) => {
-  return (
-    <div className="w-full mt-8">
-      {/* THIS IS THE ONLY HEADER. 
-          If you see another "My Todo List" above this, 
-          you must delete it from your page.tsx file.
-      */}
-      <div className="flex flex-col items-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 text-center">
-          My Todo List
-        </h2>
-        <div className="w-16 h-1.5 bg-emerald-500 rounded-full mt-2" />
-      </div>
+const TaskList: React.FC<TaskListProps> = ({ tasks, onTaskUpdated, onTaskDeleted, userId, pendingOperations, setOperationPending }) => {
+  if (tasks.length === 0) {
+    return <div className="text-center py-8 text-slate-500">No tasks yet. Add one to get started!</div>;
+  }
 
-      {tasks.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-500 shadow-sm">
-          <p className="text-lg font-medium">No tasks yet. Add one to get started!</p>
-        </div>
-      ) : (
-        <div className="bg-transparent space-y-4">
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              variants={container}
+  return (
+    <div className="bg-white shadow-md rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden">
+      <AnimatePresence>
+        <motion.ul
+          className="divide-y divide-slate-200"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          {tasks.map((task) => (
+            <motion.li
+              key={task.id}
+              variants={item}
               initial="hidden"
               animate="show"
-              className="flex flex-col gap-3"
+              exit="hidden"
+              transition={{ duration: 0.3 }}
             >
-              {tasks.map((task) => (
-                <motion.div
-                  key={task.id}
-                  variants={item}
-                  layout
-                  initial="hidden"
-                  animate="show"
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <TaskItem
-                    task={task}
-                    onTaskUpdated={onTaskUpdated}
-                    onTaskDeleted={onTaskDeleted}
-                    userId={userId}
-                    pendingOperations={pendingOperations}
-                    setOperationPending={setOperationPending}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      )}
+              <TaskItem
+                task={task}
+                onTaskUpdated={onTaskUpdated}
+                onTaskDeleted={onTaskDeleted}
+                userId={userId}
+                pendingOperations={pendingOperations}
+                setOperationPending={setOperationPending}
+              />
+            </motion.li>
+          ))}
+        </motion.ul>
+      </AnimatePresence>
     </div>
   );
 };
