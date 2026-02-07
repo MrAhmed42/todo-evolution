@@ -38,41 +38,40 @@ const TaskList: React.FC<TaskListProps> = ({
   setOperationPending 
 }) => {
   return (
-    <div className="w-full">
-      {/* FIXED HEADING SECTION:
-         - flex flex-col: Stacks title and line vertically
-         - items-center: Centers them on mobile
-         - md:items-start: Aligns them to the left on larger screens
+    <div className="w-full mt-8">
+      {/* THIS IS THE ONLY HEADER. 
+          If you see another "My Todo List" above this, 
+          you must delete it from your page.tsx file.
       */}
-      <div className="flex flex-col items-center md:items-start mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
+      <div className="flex flex-col items-center mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 text-center">
           My Todo List
         </h2>
         <div className="w-16 h-1.5 bg-emerald-500 rounded-full mt-2" />
       </div>
 
       {tasks.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-500">
+        <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-500 shadow-sm">
           <p className="text-lg font-medium">No tasks yet. Add one to get started!</p>
         </div>
       ) : (
-        <div className="bg-white shadow-md rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden">
+        <div className="bg-transparent space-y-4">
           <AnimatePresence mode="popLayout">
-            <motion.ul
-              className="divide-y divide-slate-200"
+            <motion.div
               variants={container}
               initial="hidden"
               animate="show"
+              className="flex flex-col gap-3"
             >
               {tasks.map((task) => (
-                <motion.li
+                <motion.div
                   key={task.id}
                   variants={item}
                   layout
                   initial="hidden"
                   animate="show"
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <TaskItem
                     task={task}
@@ -82,9 +81,9 @@ const TaskList: React.FC<TaskListProps> = ({
                     pendingOperations={pendingOperations}
                     setOperationPending={setOperationPending}
                   />
-                </motion.li>
+                </motion.div>
               ))}
-            </motion.ul>
+            </motion.div>
           </AnimatePresence>
         </div>
       )}
