@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import TaskDashboard from '../../../components/TaskDashboard';
-import ChatPageContent from '../../../components/ChatPageContent'; // We'll create this component
-import { authClient } from '../../../lib/auth';
+import TaskDashboard from '../components/TaskDashboard';
+import ChatPageContent from '../components/ChatPageContent'; // We'll create this component
+import { authClient } from '../lib/auth';
 import { useRouter } from 'next/navigation';
-import LoadingSpinner from '../../../components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function CombinedDashboardPage() {
   const [userId, setUserId] = useState<string | null>(null);
